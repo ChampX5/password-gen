@@ -118,11 +118,11 @@
             .result {
                 background: rgba(255, 255, 255, 0.08);
                 padding: 15px 0;
-                text-transform: uppercase;
                 user-select: none;
                 border-radius: 10px;
                 font-size: 16px;
                 position: relative;
+                margin-bottom: 35px;
             }
 
             .copyBtn {
@@ -144,6 +144,21 @@
                 content: 'Result';
                 position: absolute;
                 top: calc(-50% + 3px);
+                left: 2px;
+                display: inline-block;
+                text-transform: uppercase;
+                font-family: Poppins;
+                user-select: none;
+                font-size: 15px;
+                color: rgba(255, 255, 255, 0.5);
+                background: transparent;
+                cursor: default;
+            }
+
+            .result:after {
+                content: 'Length';
+                position: absolute;
+                bottom: -75%;
                 left: 2px;
                 display: inline-block;
                 text-transform: uppercase;
@@ -241,6 +256,58 @@
                 background: #5d68e2;
                 box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
             }
+
+            .length {
+                width: 100%;
+                padding: 10px 0 calc(10px + 10px) 0;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.08);
+                position: relative;
+            }
+
+            .length:before {
+                content: '4';
+                position: absolute;
+                top: calc(30% + 1px);
+                left: 7%;
+            }
+
+            .length:after {
+                content: '32';
+                position: absolute;
+                top: calc(30% + 1px);
+                right: 6%;
+            }
+
+            .slider {
+                appearance: none;
+                width: 75%;
+                height: 1px;
+                background: #d3d3d3;
+                outline: none;
+            }
+
+            .slider:hover {
+                opacity: 1;
+            }
+
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 10px;
+                height: 25px;
+                background: #000637;
+                border: 1px solid white;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 25px;
+                height: 25px;
+                background: #04aa6d;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -249,7 +316,18 @@
                 <div class="interface">
                     <div class="head">password generator</div>
 
-                    <div class="result">click generate</div>
+                    <div class="result">CLICK GENERATE</div>
+
+                    <div class="length">
+                        <input
+                            type="range"
+                            min="4"
+                            max="32"
+                            value="18"
+                            class="slider"
+                            id="length-slider"
+                        />
+                    </div>
 
                     <div class="options">
                         <div class="option">
@@ -298,5 +376,64 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            const getCharacters = () => {
+                console.clear();
+
+                const characterCodes = Array.from(Array(26)).map((_, i) => {
+                    return i + 97;
+                });
+
+                const lowercase = characterCodes.map((val) =>
+                    String.fromCharCode(val)
+                );
+                const uppercase = lowercase.map((val) => val.toUpperCase());
+                const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+                const symbols = '!@#$%^&*()[]';
+
+                const objects = {
+                    lowercase: document.querySelector('#lowercase'),
+                    uppercase: document.querySelector('#uppercase'),
+                    numbers: document.querySelector('#numbers'),
+                    symbols: document.querySelector('#symbols')
+                };
+
+                const letters = [
+                    ...(objects.lowercase.checked ? lowercase : []),
+                    ...(objects.uppercase.checked ? uppercase : []),
+                    ...(objects.numbers.checked ? numbers : []),
+                    ...(objects.symbols.checked ? symbols : [])
+                ];
+
+                console.log(letters);
+                return letters;
+            };
+
+            const generatePassword = (length) => {
+                const chars = getCharacters();
+                const resultElem = document.querySelector('.result');
+
+                if (chars.length !== 0) {
+                    let password = '';
+
+                    for (let i = 0; i < length; i++) {
+                        password +=
+                            chars[Math.floor(Math.random() * chars.length)];
+                    }
+                    resultElem.innerHTML = password;
+                } else {
+                    resultElem.innerHTML =
+                        'No password. Please select characters.';
+                }
+            };
+
+            document
+                .querySelector('.generateBtn')
+                .addEventListener('click', (e) => {
+                    const length = document.querySelector('.slider').value;
+                    generatePassword(length);
+                });
+        </script>
     </body>
 </html>
