@@ -28,12 +28,26 @@
 
             body {
                 background: rgb(0, 75, 113);
+                overflow: hidden;
+                height: 100vh;
+            }
+
+            :root {
+                --shadow: #0a0908;
+                --secondary: #22333b;
+                --text-color: #f2f4f3;
+                --border: #a9927d;
+                --primary: #5e503f;
             }
 
             .container {
-                height: 90vh;
+                height: 100%;
                 width: 100%;
                 font-family: 'Montserrat';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
 
             .center {
@@ -63,6 +77,7 @@
                 background: #0a0e31;
                 border-radius: 10px;
                 color: white;
+                box-shadow: 2px 2px 10px 0 var(--shadow);
             }
 
             .head {
@@ -72,6 +87,20 @@
                 margin: 0 0 30px 0;
                 text-transform: capitalize;
                 font-weight: 800;
+                position: relative;
+            }
+
+            .head:after {
+                content: 'click to copy';
+                text-transform: none;
+                color: white;
+                position: absolute;
+                font-size: 10px;
+                font-weight: 100;
+                letter-spacing: 1px;
+                top: 275%;
+                right: 0;
+                transform: translateX(-20%);
             }
 
             .label {
@@ -123,21 +152,7 @@
                 font-size: 16px;
                 position: relative;
                 margin-bottom: 35px;
-            }
-
-            .copyBtn {
-                position: absolute;
-                top: var(--y);
-                left: var(--x);
-                width: 38px;
-                height: 38px;
-                background: #fff;
-                border-radius: 50%;
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0);
-                transition: all 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 cursor: pointer;
-                z-index: 2;
             }
 
             .result:before {
@@ -205,6 +220,23 @@
                 user-select: none;
                 letter-spacing: 1px;
                 font-size: 20px;
+            }
+
+            .generateBtn:after {
+                content: '';
+                border-radius: 10px;
+                width: 0;
+                height: 2px;
+                position: absolute;
+                top: 70%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: white;
+                transition: all 300ms ease-in-out;
+            }
+
+            .generateBtn:hover:after {
+                width: 245px;
             }
 
             .checkbox {
@@ -308,6 +340,60 @@
                 background: #04aa6d;
                 cursor: pointer;
             }
+
+            .popup-msg {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                font-family: Roboto;
+                color: var(--text-color);
+                bottom: 10px;
+                right: -320px;
+                width: 300px;
+                height: 75px;
+                border-radius: 10px;
+                background: var(--primary);
+                border: 1px var(--border) solid;
+            }
+
+            .popup {
+                animation-name: popup;
+                animation-timing-function: ease-in-out;
+                animation-direction: normal;
+                animation-fill-mode: forwards;
+                animation-duration: 3s;
+            }
+
+            @keyframes popup {
+                0% {
+                    bottom: 10px;
+                    right: -320px;
+                }
+
+                10% {
+                    right: 10px;
+                }
+
+                90% {
+                    right: 10px;
+                    bottom: 10px;
+                }
+
+                95% {
+                    bottom: -100px;
+                    right: 10px;
+                }
+
+                97% {
+                    right: -320px;
+                }
+
+                100% {
+                    bottom: 10px;
+                }
+            }
         </style>
     </head>
     <body>
@@ -377,7 +463,13 @@
             </div>
         </div>
 
+        <div class="popup-msg"></div>
+
         <script>
+            const resultElem = document.querySelector('.result');
+            const generateBtn = document.querySelector('.generateBtn');
+            const popup = document.querySelector('.popup-msg');
+
             const getCharacters = () => {
                 console.clear();
 
@@ -406,13 +498,11 @@
                     ...(objects.symbols.checked ? symbols : [])
                 ];
 
-                console.log(letters);
                 return letters;
             };
 
             const generatePassword = (length) => {
                 const chars = getCharacters();
-                const resultElem = document.querySelector('.result');
 
                 if (chars.length !== 0) {
                     let password = '';
@@ -423,17 +513,51 @@
                     }
                     resultElem.innerHTML = password;
                 } else {
-                    resultElem.innerHTML =
-                        'No password. Please select characters.';
+                    popup.innerHTML = 'Error! Password not generated.';
+
+                    popup.classList.add('popup');
+
+                    setTimeout(() => {
+                        popup.classList.remove('popup');
+                    }, 3000);
                 }
             };
 
-            document
-                .querySelector('.generateBtn')
-                .addEventListener('click', (e) => {
-                    const length = document.querySelector('.slider').value;
-                    generatePassword(length);
-                });
+            generateBtn.addEventListener('click', (e) => {
+                const length = document.querySelector('.slider').value;
+                generatePassword(length);
+            });
+
+            const copy = (text) => {
+                const elem = document.createElement('textarea');
+                elem.value = text;
+                document.body.appendChild(elem);
+                elem.select();
+                document.execCommand('copy');
+                document.body.removeChild(elem);
+            };
+
+            resultElem.addEventListener('click', () => {
+                if (resultElem.innerHTML !== 'CLICK GENERATE') {
+                    copy(resultElem.innerHTML);
+
+                    popup.innerHTML = 'Copied! 🙂🙂';
+
+                    popup.classList.add('popup');
+
+                    setTimeout(() => {
+                        popup.classList.remove('popup');
+                    }, 3000);
+                } else {
+                    popup.innerHTML = 'Error! Password not generated.';
+
+                    popup.classList.add('popup');
+
+                    setTimeout(() => {
+                        popup.classList.remove('popup');
+                    }, 3000);
+                }
+            });
         </script>
     </body>
 </html>
