@@ -27,7 +27,7 @@
             }
 
             body {
-                background: rgb(0, 75, 113);
+                background: #5865F2;
                 overflow: hidden;
                 height: 100vh;
             }
@@ -151,7 +151,6 @@
                 border-radius: 10px;
                 font-size: 16px;
                 position: relative;
-                margin-bottom: 35px;
                 cursor: pointer;
             }
 
@@ -173,7 +172,7 @@
             .result:after {
                 content: 'Length';
                 position: absolute;
-                bottom: -75%;
+                top: -905%;
                 left: 2px;
                 display: inline-block;
                 text-transform: uppercase;
@@ -203,15 +202,11 @@
             }
 
             .generateBtn {
-                background-image: linear-gradient(
-                    135deg,
-                    #667eea 0%,
-                    #764ba2 100%
-                );
+                background-image: linear-gradient(to right, rgb(155, 253, 255), rgb(0, 200, 255));
                 width: 400px;
                 padding: 10px;
                 border: none;
-                color: white;
+                color: black;
                 text-transform: uppercase;
                 position: relative;
                 border-radius: 10px;
@@ -220,6 +215,7 @@
                 user-select: none;
                 letter-spacing: 1px;
                 font-size: 20px;
+                margin-bottom: 35px;
             }
 
             .generateBtn:after {
@@ -231,7 +227,7 @@
                 top: 70%;
                 left: 50%;
                 transform: translateX(-50%);
-                background: white;
+                background: black;
                 transition: all 300ms ease-in-out;
             }
 
@@ -363,7 +359,7 @@
                 animation-timing-function: ease-in-out;
                 animation-direction: normal;
                 animation-fill-mode: forwards;
-                animation-duration: 3s;
+                animation-duration: 2.5s;
             }
 
             @keyframes popup {
@@ -401,8 +397,6 @@
             <div class="center">
                 <div class="interface">
                     <div class="head">password generator</div>
-
-                    <div class="result">CLICK GENERATE</div>
 
                     <div class="length">
                         <input
@@ -459,6 +453,8 @@
                     </div>
 
                     <button class="generateBtn">Generate Password</button>
+
+                    <div class="result">CLICK GENERATE</div>
                 </div>
             </div>
         </div>
@@ -544,7 +540,6 @@
                     popup.innerHTML = 'Copied! 🙂🙂';
 
                     popup.classList.add('popup');
-
                     setTimeout(() => {
                         popup.classList.remove('popup');
                     }, 3000);
